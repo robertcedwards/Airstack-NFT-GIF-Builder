@@ -28,7 +28,9 @@ function displayNfts(data) {
     Object.keys(data).forEach(blockchainKey => {
         const tokenBalances = data[blockchainKey].TokenBalance;
         tokenBalances.forEach(tokenBalance => {
-            const imageUrl = tokenBalance.tokenNfts?.contentValue?.image?.medium || 'fallback-image-url.png';
+            const imageUrl = tokenBalance.tokenNfts?.contentValue?.image?.medium || 'fallback-image.png';
+            const fallbackImageUrl = 'fallback-image.png';
+            if (imageUrl === fallbackImageUrl) return;
 
             const imgElement = document.createElement('img');
             imgElement.src = imageUrl;
@@ -49,13 +51,30 @@ function handleImageSelection(img, imageSrc) {
         convertImageToDataURL(imageSrc, dataURL => {
             selectedImagesData.push({ src: imageSrc, dataURL: dataURL });
             updatePreviewAndButtonVisibility();
+            updateFooterVisibility();
+
         });
     } else {
         const index = selectedImagesData.findIndex(item => item.src === imageSrc);
         if (index > -1) {
             selectedImagesData.splice(index, 1);
             updatePreviewAndButtonVisibility();
+            updateFooterVisibility();
+
         }
+    }
+}
+
+function updateFooterVisibility() {
+    const footer = document.getElementById('stickyFooter');
+    if (selectedImagesData.length > 0) {
+        footer.classList.remove('hidden'); // Show the footer
+        footer.classList.add('sticky-footer'); // Hide the footer
+
+    } else {
+        footer.classList.add('hidden'); // Hide the footer
+        footer.classList.remove('sticky-footer'); // Show the footer
+
     }
 }
 
@@ -87,12 +106,7 @@ function updatePreviewAndButtonVisibility() {
         previewArea.appendChild(imgElement);
     });
 
-    const createGifButton = document.getElementById('createGifButton');
-    if (selectedImagesData.length > 0) {
-        createGifButton.classList.remove('hidden');
-    } else {
-        createGifButton.classList.add('hidden');
-    }
+
 }
 
 
@@ -100,20 +114,30 @@ document.getElementById('createGifButton').addEventListener('click', () => {
     console.log('Create GIF button clicked');
     createGifFromDataUrls(selectedImagesData.map(item => item.dataURL));
 });
+document.getElementById('resetButton').addEventListener('click', resetSelectionAndGif);
+function resetSelectionAndGif() {
+    selectedImagesData = [];
+    gifContainer.innerHTML = ''; 
+    gifContainer.classList.add('hidden');
+    document.getElementById('selectedImagesPreview').innerHTML = '';
+    document.getElementById('nftGallery').querySelectorAll('.nft-item.selected').forEach(item => {
+        item.classList.remove('selected');
+    
 
-function scrollToPageBottom() {
-    window.scrollTo({ 
-        bottom: document.body.scrollHeight, 
-        behavior: 'smooth' 
     });
+
+    
 }
+
+
+
+
+
 function createGifFromDataUrls(dataUrls) {
     if (dataUrls.length === 0) {
-        console.log('No images selected for GIF creation.');
+        alert('Please select some images to make a GIF.');
         return;
     }
-
-    console.log('Create GIF button clicked');
 
     const gif = new GIF({
         workers: 2,
@@ -142,31 +166,31 @@ function createGifFromDataUrls(dataUrls) {
 
     gif.on('finished', function(blob) {
         const url = URL.createObjectURL(blob);
-    
-        // Create or select a container for the GIF and download link
         let gifContainer = document.getElementById('gifContainer');
         if (!gifContainer) {
             gifContainer = document.createElement('div');
             gifContainer.id = 'gifContainer';
             gifContainer.classList.add('flex', 'flex-col', 'items-center', 'mt-4');
             document.body.appendChild(gifContainer);
+            
         } else {
-            gifContainer.innerHTML = ''; // Clear previous content
+            gifContainer.innerHTML = ''; 
+            gifContainer.classList.add('hidden');
+
         }
     
-        // Create and append the preview image
         const previewImg = document.createElement('img');
         previewImg.src = url;
         gifContainer.appendChild(previewImg);
+        gifContainer.classList.remove('hidden');
     
-        // Create and append the download link
         const downloadLink = document.createElement('a');
         downloadLink.href = url;
         downloadLink.download = 'nft-collection.gif';
         downloadLink.textContent = 'Download GIF';
         downloadLink.id = 'download';
-        downloadLink.classList.add('mt-8', 'bg-green-500', 'hover:bg-green-700', 'text-white', 'font-bold','py-2','px-4','rounded');
+        
+        downloadLink.classList.add('mt-8', 'bg-purple-500', 'hover:bg-purple-700', 'text-white', 'font-bold','py-2','px-4','rounded');
         gifContainer.appendChild(downloadLink);
-        scrollToPageBottom();
     });
 };    

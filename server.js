@@ -1,13 +1,9 @@
-// server.js
-
 const express = require('express');
 const { init, fetchQuery } = require("@airstack/node");
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Initialize Airstack with your API key
 init(process.env.AIRSTACK_API_KEY);
 
 const query = `query GetTokens($tokenType: [TokenType!], $limit: Int, $sortBy: OrderBy, $owner: Identity) {
@@ -239,10 +235,9 @@ tokenTransfers(input: {filter: {from: {_eq: "0x000000000000000000000000000000000
 
     }
   }
-}`; // Your GraphQL query here
+}`;
 
-app.use(express.static('public')); // Serve your frontend files from the public directory
-
+app.use(express.static('public'));
 app.get('/api/fetch-nfts', async (req, res) => {
     const ensAddress = req.query.ensAddress;
 
@@ -251,7 +246,7 @@ app.get('/api/fetch-nfts', async (req, res) => {
     }
 
     const variables = {
-        tokenType: ["ERC721"], // Adjust based on your requirements
+        tokenType: ["ERC721"],
         limit: 10,
         sortBy: "DESC",
         owner: ensAddress

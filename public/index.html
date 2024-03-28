@@ -12,19 +12,24 @@
 <body class="bg-gray-900 text-white">
     <div class="container mx-auto px-4 py-12">
         <h1 class="text-3xl font-bold text-center mb-6">Fetch NFTs and Create GIF</h1>
-        <div class="flex justify-center mb-8">
-            <input type="text" id="ensAddress" placeholder="ENS Address" class="input border border-gray-700 p-2 text-black">
-            <button id="fetchNfts" class="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Fetch NFTs</button>
+        <div class="text-lg text-center mb-4">
+            <p>Enter an ENS or Wallet Address & Select Images 👇 to Make a GIF!</p>
         </div>
-        <div id="nftGallery" class="carousel grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="flex justify-center items-center"> <!-- Adjusted classes here for centering -->
+            <input type="text" id="ensAddress" placeholder="ENS/Wallet Address" class="input border border-gray-700 p-2 text-black">
+            <button id="fetchNfts" class="ml-4 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">Fetch NFTs</button>
         </div>
-
-        <div id="gifOutput" class="mt-8">
+        <div id="nftGallery" class="carousel grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
         </div>
     </div>
-    <footer id="stickyFooter" class="sticky-footer sticky inset-x-0 bottom-0 bg-gray-200 text-center p-4">
+    
+    <footer id="stickyFooter" class="inset-x-0 bottom-0 bg-gray-200 text-center p-4 hidden">
         <div id="selectedImagesPreview" class="preview-area"></div>
-        <button id="createGifButton" class="mt-8 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Make GIF</button>
+        <button id="createGifButton" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">Make GIF</button>
+        <button id="resetButton" class="reset-btn ml-4 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">🔄 Reset Selection</button>
+        <div class="mt-8 flex justify-center items-center">
+            <div id="gifContainer" class="rounded-lg bg-indigo-700 p-4 shadow-lg hidden"></div>
+        </div>            
     </footer>
      
 </body>
