@@ -1,7 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const addressFromURL = getAddressFromURL();
+    
+    if (addressFromURL) {
+        document.getElementById('ensAddress').value = addressFromURL; 
+        fetchAndDisplayNFTs(addressFromURL); 
+    }
     document.getElementById('fetchNfts').addEventListener('click', fetchAndDisplayNFTs);
+    const ensAddressInput = document.getElementById('ensAddress');
+    ensAddressInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            fetchAndDisplayNFTs(); 
+        }
+    });
 });
-
+function getAddressFromURL() {
+    const queryParams = new URLSearchParams(window.location.search);
+    return queryParams.get('address'); // 'address' is the name of your query parameter
+}
 let selectedImagesData = [];
 
 async function fetchAndDisplayNFTs() {
@@ -128,9 +144,6 @@ function resetSelectionAndGif() {
 
     
 }
-
-
-
 
 
 function createGifFromDataUrls(dataUrls) {
