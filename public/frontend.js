@@ -65,7 +65,7 @@ function displayNfts(data) {
 function handleImageSelection(img, imageSrc) {
     if (img.classList.contains('selected')) {
         convertImageToDataURL(imageSrc, dataURL => {
-            selectedImagesData.push({ src: imageSrc, dataURL: dataURL });
+            selectedImagesData.push({ src: imageSrc, dataURL: dataURL});
             updatePreviewAndButtonVisibility();
             updateFooterVisibility();
 
@@ -118,6 +118,10 @@ function updatePreviewAndButtonVisibility() {
     selectedImagesData.forEach(item => {
         const imgElement = document.createElement('img');
         imgElement.src = item.dataURL;
+        imgElement.onerror = function() {
+            this.src = '/fallback-image.png'; // Fallback image
+            this.onerror = null; // Prevent infinite loop if the fallback image also fails
+        };        
         imgElement.classList.add('preview-image'); 
         previewArea.appendChild(imgElement);
     });
