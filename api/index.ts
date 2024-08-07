@@ -3,8 +3,7 @@ const { init, fetchQuery } = require("@airstack/node");
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-init(process.env.AIRSTACK_API_KEY);
+const PORT = process.env.PORT ?? 3000;init(process.env.AIRSTACK_API_KEY);
 
 const query = `query GetTokens($tokenType: [TokenType!], $limit: Int, $sortBy: OrderBy, $owner: Identity) {
     
